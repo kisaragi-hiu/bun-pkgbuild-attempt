@@ -7,7 +7,7 @@ pkgbase=bun
 pkgname=(bun bun-baseline)
 pkgver=1.0.0
 pkgrel=1
-# set in package_*
+# set in package_* functions
 # pkgdesc=""
 arch=('x86_64')
 url="https://bun.sh"
@@ -46,6 +46,25 @@ prepare () {
 }
 
 build () {
+  cd ${pkgbase}
+  # "jsc" depends on the "headers" target, which needs "node-fallbacks"
+  # and other targets built by the "vendor" target
+  make node-fallbacks
+  # `make jsc` fails with FileNotFound without this
+  make identifier-cache
+
+  # The "jsc" task is broken down because the last part of it requires
+  # some care beforehand
+  make jsc-build jsc-copy-headers
+
+  # The LTO folder is where the Makefile expects JSC to be built to
+  # I haven't figured out how to get an LTO build, meanwhile just use
+  # the non-LTO folder
+  local _jsc="WEBKIT_RELEASE_DIR_LTO=$(realpath src/bun.js/WebKit/WebKitBuild/Release/)"
+  # FIXME: this still fails with issues around libatomic.a and finding
+  # the ICU library
+  make "$_jsc" jsc-bindings
+
   # These errors are on by default but triggered during build.
   # Turn them off.
   # https://github.com/oven-sh/bun/issues/4732
@@ -53,13 +72,6 @@ build () {
 -Wno-implicit-function-declaration \
 -Wno-implicit-int \
 -Wno-incompatible-function-pointer-types"
-  local _jsc="JSC_BASE_DIR=${HOME}/webkit-build"
-  cd ${pkgbase}
-  # TODO build bun-webkit
-  # when WEBKIT_RELEASE_DIR_LTO exists, we probably don't need to set
-  # JSC_BASE_DIR
-  make jsc
-
   make \
     "$_errors_off" \
     bun
