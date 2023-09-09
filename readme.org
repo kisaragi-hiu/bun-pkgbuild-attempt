@@ -1,0 +1,17 @@
+* An attempt at creating a PKGBUILD for [[https://github.com/oven-sh/bun][Bun]]
+
+I was surprised when I saw that there are multiple binary packages for Bun in the AUR, but no build-from-source package. So this is my attempt.
+
+Some notes:
+
+- Bun has a dependency on a Rust package. Fair enough, but it was surprising to see Rust in the requirements.
+
+- There is a sort of [[https://bun.sh/docs/project/development][build guide in the documentation]], but it's written for setting up a development environment and making development builds.
+
+  The process takes “~10GB of free disk space for the repository and build artifacts”, which I guess makes sense given how everything is built with Docker.
+
+  There is no instruction to build a release build of Bun. The release builds are built on GitHub Actions [[https://github.com/oven-sh/bun/blob/main/Dockerfile][via Docker]]. It looks quite messy.
+
+- The Makefile tries to do a static build. This is normally pretty nice, but it's also doing this for JavaScriptCore — there is no =libatomic.a= on Arch, I don't know how to get it to find ICU libraries correctly; I stopped here.
+
+The pre-built binaries work really well, but it is going to take some work to get Bun packaged in distros.

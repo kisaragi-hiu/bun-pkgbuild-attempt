@@ -1,5 +1,3 @@
-# Maintainer: Kisaragi Hiu <mail@kisaragi-hiu.com>
-
 # upstream provides a normal build (with AVX2 instructions) and a
 # "baseline" build (without). This is accomplished through Zig by
 # setting CPU_TARGET to haswell for AVX2, or nehalem for without?
