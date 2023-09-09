@@ -29,10 +29,15 @@ source=(
 sha256sums=('SKIP')
 
 prepare () {
-  # Clone submodules once
   cd ${pkgbase}
-  # We also want the WebKit submodule
-  # Instead of fiddling with the "submodule" target in Makefile, just do this
+
+  # There is a C++ flag that is not correctly included as part of a string
+  patch -p0 < ../jsc_incorrect_argument.patch
+
+  # Clone submodules once
+  #
+  # We also want the WebKit submodule, which `make submodule` doesn't
+  # provide
   git submodule update --init --recursive --progress --depth=1 --checkout
   npm install --ignore-scripts --omit=dev
   cd ..

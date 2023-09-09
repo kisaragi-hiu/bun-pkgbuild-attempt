@@ -1,0 +1,9 @@
+diff --git a/Makefile b/Makefile
+index 49d6535a7..4b9d8bafd 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1293,3 +1293,3 @@ jsc-build-linux-compile-build:
+ 		cd $(WEBKIT_RELEASE_DIR)  && \
+-	CFLAGS="$(CFLAGS) -Wl,--whole-archive -ffat-lto-objects" CXXFLAGS="$(CXXFLAGS) -Wl,--whole-archive -ffat-lto-objects" -DUSE_BUN_JSC_ADDITIONS=ON \
++	CFLAGS="$(CFLAGS) -Wl,--whole-archive -ffat-lto-objects" CXXFLAGS="$(CXXFLAGS) -Wl,--whole-archive -ffat-lto-objects -DUSE_BUN_JSC_ADDITIONS=ON" \
+ 		cmake --build $(WEBKIT_RELEASE_DIR) --config relwithdebuginfo --target jsc
